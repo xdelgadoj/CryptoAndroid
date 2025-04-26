@@ -11,9 +11,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.coincapapp.navigation.BottomNavigationItem
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -32,9 +36,15 @@ fun NavigationGraph(navController: NavHostController) {
     NavHost(navController, startDestination = BottomNavigationItem.Home.route) {
         composable(BottomNavigationItem.Home.route) { AssetsList(navController = navController) }
         composable(BottomNavigationItem.Favourites.route) { Favourites() }
-        composable(BottomNavigationItem.Settings.route) { Settings() }
+        composable(BottomNavigationItem.Settings.route) { Settings(
+            auth = Firebase.auth,
+            onBack = { navController.popBackStack() }
+        ) }
 
-        composable("${BottomNavigationItem.Home.route}/${assetIdKey}") { backStackEntry ->
+        composable(
+            route = "${BottomNavigationItem.Home.route}/{assetId}",
+            arguments = listOf(navArgument("assetId") { type = NavType.StringType })
+        ) { backStackEntry ->
             AssetDetailView(
                 assetId = backStackEntry.arguments?.getString(assetIdKey) ?: "missing asset",
                 navController

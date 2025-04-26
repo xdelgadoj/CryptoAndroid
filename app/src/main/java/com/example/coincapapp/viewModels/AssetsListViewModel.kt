@@ -1,6 +1,5 @@
 package com.example.coincapapp.viewModels
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coincapapp.models.Asset
@@ -32,10 +31,8 @@ class AssetsListViewModel @Inject constructor(
             try {
                 val result = apiService.getAssets().data
                 val mappedAssets = result.map { assetResponse ->
-                    //val price = String.format("%.2f", assetResponse.priceUsd.toDouble())
-                    //val percentage = String.format("%.2f", assetResponse.changePercent24Hr.toDouble()).toDouble()
-                    val price = "20"
-                    val percentage = 2.2
+                    val price = String.format("%.2f", assetResponse.priceUsd.toDouble())
+                    val percentage = String.format("%.2f", assetResponse.changePercent24Hr.toDouble()).toDouble()
 
                     Asset(
                         assetResponse.id,
