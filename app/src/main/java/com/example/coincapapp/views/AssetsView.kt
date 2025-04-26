@@ -1,6 +1,7 @@
 package com.example.coincapapp.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,9 +32,11 @@ import com.example.coincapapp.ui.theme.Typography
 import com.example.coincapapp.viewModels.AssetsListViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavHostController
+import com.example.coincapapp.navigation.BottomNavigationItem
 
 @Composable
-fun AssetsList(viewModel: AssetsListViewModel = hiltViewModel()) {
+fun AssetsList(viewModel: AssetsListViewModel = hiltViewModel(), navController: NavHostController) {
 
 //    val assets = viewModel.assets.collectAsState()
     val assets by viewModel.assets.collectAsState()
@@ -45,18 +48,21 @@ fun AssetsList(viewModel: AssetsListViewModel = hiltViewModel()) {
             .background(MaterialTheme.colorScheme.onBackground)
     ) {
         items(assets, key = { it.id } ) { asset ->
-            AssetRow(asset)
+            AssetRow(asset) { assetId ->
+                navController.navigate("${BottomNavigationItem.Home.route}/${assetId}")
+            }
         }
     }
 }
 
 @Composable
-fun AssetRow(asset: Asset) {
+fun AssetRow(asset: Asset, onClick: (String) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onClick(asset.id) }
     ) {
         Box(
             modifier = Modifier
@@ -117,5 +123,5 @@ fun AssetRow(asset: Asset) {
 )
 @Composable
 fun AssetsListPreview() {
-//    AssetsList()
+    //AssetsList()
 }
